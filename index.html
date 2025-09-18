@@ -1,0 +1,463 @@
+<!DOCTYPE html> 
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resume - อุ๋มอิ๋ม</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Sarabun', sans-serif;
+    }
+
+    body {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* พื้นหลัง */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: #f0f4f8;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #222;
+      color: white;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 12px 0;
+      z-index: 100;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 80px 20px 40px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      display: flex;
+      overflow: hidden;
+      border: 2px solid #000; /* กรอบดำรอบๆ */
+    }
+
+    .left, .right {
+      padding: 30px;
+    }
+
+    .left {
+      width: 35%;
+      background: #1e1e1e;
+      color: white;
+      text-align: center;
+    }
+
+    .left img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .left h2 {
+      font-size: 20px;
+    }
+
+    .left p {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .left .section-title {
+      text-align: left;
+      margin-top: 25px;
+      border-bottom: 1px solid #555;
+      padding-bottom: 5px;
+      font-size: 16px;
+    }
+
+    .left ul {
+      text-align: left;
+      list-style: none;
+      padding-left: 0;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .right {
+      width: 65%;
+    }
+
+    .right h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .right h2 {
+      font-size: 16px;
+      color: #000000;
+      margin-bottom: 25px;
+    }
+
+    .section-box {
+      margin-bottom: 30px;
+    }
+
+    .section-box h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-left: 4px solid #94b4d1;
+      padding-left: 10px;
+      color: #000000;
+    }
+
+    .section-box p,
+    .section-box ul {
+      font-size: 14px;
+      color: #000000;
+    }
+
+    .section-box ul {
+      padding-left: 20px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .material-icons {
+      font-size: 18px;
+      margin-right: 8px;
+      color: #ccc;
+    }
+
+    a {
+      color: #aad;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .left, .right {
+        width: 100%;
+      }
+    }
+
+    /* layout ซ้าย-ขวา สำหรับเกียรติบัตร กิจกรรม ผลงาน */
+    /* ลดระยะห่างระหว่างกรอบแต่ละ section */
+    .section {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 5px auto; /* ลดระยะห่าง */
+      max-width: 1000px;
+      border: 2px solid black;
+    }
+
+    /* ลด padding ภายในกรอบข้อความและรูป */
+    .section .text {
+      flex: 1;
+      background: #000;
+      color: #fff;
+      padding: 0.8rem 1rem; /* ลดจากเดิม */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section .image {
+      flex: 1;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 0.8rem; /* ลดจากเดิม */
+    }
+
+
+    .section h2 {
+      margin-bottom: 15px;
+      font-size: 22px;
+      border-bottom: 3px solid #fff;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+
+    @media (max-width: 768px) {
+      .section {
+        flex-direction: column;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- พื้นหลัง -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="#page1">ข้อมูลส่วนตัว</a>
+    <a href="#hobbies">ประวัติการศึกษา</a>
+    <a href="#certificates">เกียรติบัตร</a>
+    <a href="#projects">ผลงาน</a>
+    <a href="#activities">กิจกรรม</a>
+    <a href="#hobbies">งานอดิเรก</a>
+  </div>
+
+  <!-- หน้า 1: ข้อมูลส่วนตัว -->
+  <section id="page1">
+    <div class="container">
+      <div class="left">
+        <img src="Aim.jpg.jpg" alt="profile" />
+        <h2>ณิชา เฉลยรูป</h2>
+
+        <div class="section-title">ความสามารถพิเศษ</div>
+        <ul>
+          <li>กีฬา</li>
+          <li>วาดรูป</li>
+        </ul>
+
+        <div class="section-title">ทักษะด้านกีฬา</div>
+        <ul>
+          <li>เปตอง</li>
+          <li>แบดมินตัน</li>
+        </ul>
+
+        <div class="section-title">การติดต่อ</div>
+        <div class="contact-item"><span class="material-icons">call</span>065-602-3952</div>
+        <div class="contact-item"><span class="material-icons">email</span>aumaim1234.com@gmail.com</div>
+        <div class="contact-item"><span class="material-icons">camera_alt</span><a href="https://www.instagram.com/oaum_aimo" target="_blank">@oaum_aimo</a></div>
+        <div class="contact-item"><span class="material-icons">person</span><a href="https://www.facebook.com/AumAim" target="_blank">Facebook</a></div>
+      </div>
+
+      <div class="right">
+        <h1>ณิชา เฉลยรูป</h1>
+        <h2>ชื่อเล่น: อุ๋มอิ๋ม | อายุ: 20 ปี</h2>
+
+        <div class="section-box">
+          <h3>เกี่ยวกับฉัน</h3>
+          <p>
+            ฉันมีความคิดสร้างสรรค์ และสามารถทำงานร่วมกับผู้อื่นได้ดี มีทักษะในการออกแบบกราฟิก เช่น Adobe Photoshop, Illustrator และ Canva
+            พร้อมเรียนรู้สิ่งใหม่ ๆ เพื่อพัฒนาตนเองในสายงานดีไซน์
+          </p>
+        </div>
+          <h2>ข้อมูลส่วนตัว</h2> 
+  <div class="field">  
+    <div class="value">ณิชา เฉลยรูป</div> 
+  </div> 
+  <div class="field">
+    <div class="label">ที่อยู่174/2 หมู่12 ถนน- ซอย18 </div>
+    <div class="value">ตำบลพัฒนานิคม , อำเภอพัฒนานิคม , จังหวัดลพบุรี 15140</div>
+  </div> 
+  <div class="field"> 
+    <div class="label">วันเกิด</div> 
+    <div class="value">1 กรกรฎาคม 2548 (อายุ 20 ปี)</div>
+  </div> 
+  <div class="field"> 
+    <div class="label">ครอบครัว</div> 
+    <div class="value">กฤษฎา เฉลยรูป</div> 
+    <div class="value">สุมาลัย เฉลยรูป</div>
+    <div class="value">นริษา เฉลยรูป</div>
+  </div> 
+      <div>
+        <img src="emi3.gif" alt="เกียรติบัตร">
+      </div>
+      </div>
+    </div> 
+  </section>
+
+  <!-- หน้า 2: การศึกษา -->
+    <section id="hobbies">
+    <div class="container section">
+      <div class="text" style="width:100%; background: #000; color: #fff;">
+        <h1>ประวัติการศึกษา</h1>
+        <div class="section-box">
+          <ul>
+            <div class="text" style="width: 100%;background-color: #000000;">
+             <li>📘 มัธยมศึกษาตอนปลาย - โรงเรียนเพ็ญพัฒนา</li>
+              <li>🎓 ปวช. สาขาคอมพิวเตอร์กราฟิก - วิทยาลัยเทคนิคลพบุรี</li>
+               <li>📖 ปัจจุบันศึกษา ปวส. สาขาออกแบบกราฟิก - วิทยาลัยเทคนิคลพบุรี</li>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- หน้า 6: งานอดิเรก -->
+    <section id="hobbies">
+    <div class="container section">
+      <div class="text" style="width:100%; background:#000; color:#fff;">
+        <h2>งานอดิเรก</h2>
+        <div class="section-box">
+          <ul>
+           <div class="text" style="width: 100%;background-color: #000000;">
+            <li>วาดภาพดิจิทัล</li>
+             <li>อ่านหนังสือการ์ตูนและนิยาย</li>
+              <li>เล่นกีฬา เช่น แบดมินตัน</li>
+           </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- หน้า 3: เกียรติบัตร -->
+<section id="certificates">
+  <div class="container section">
+    <div class="text">
+      <h2>เกียรติบัตร</h2>
+      <p>การนอนนานบัคแคต คาปูแห่ง 2599</p>
+      <p>รางวัลชนะเลิศอันดับที่1 (แม่งนอนน้ำลายไหลเลย)</p>
+    </div>
+    <div class="image">
+      <img src="emi3.gif" alt="เกียรติบัตร">
+    </div>
+  </div>
+</section>
+
+<!-- หน้า 4: กิจกรรม -->
+<section id="activities">
+  <div class="container section">
+    <div class="text">
+      <h2>กิจกรรม</h2>
+      <p>คาปู ร่วมกิจกรรมอาสาเป็นตำรวจจราจร</p>
+      <p>ช่วยโบกรถ ในกลางสี่แยก เก่งไหมล่ะ </p>
+    </div>
+    <div class="image">
+      <img src="emi1.gif" alt="กิจกรรม">
+    </div>
+  </div>
+</section>
+
+<section id="activities">
+  <div class="container section">
+    <div class="text">
+      <h2>กิจกรรม</h2>
+      <p>คา ปู ฝึกกล้ามลิ้น</p>
+      <p>การออกกำัลงกายของแมว6ขา....แหละมั้ง</p>
+    </div>
+    <div class="image">
+      <img src="emi2.gif" alt="กิจกรรม">
+    </div>
+  </div>
+</section>
+
+  <section id="projects">
+  <div class="container section">
+    <div class="text">
+      <h2>ผลงาน</h2>
+      <p>ออกแบบโปสเตอร์งานสิงค้า</p>
+      <p>เป็นการออกแบบป้ายและโปสเตอร์สิงค้า</p>
+    </div>
+    <div class="image">
+      <img id="profilePic" src="emi6.jpg" alt="Profile Picture" class="fade-image">
+    </div>
+  </div>
+</section>
+
+<script>
+  // ใส่ชื่อไฟล์รูปทั้งหมดที่ต้องการหมุน
+  const images = ["emi6.jpg", "emi7.jpg", "emi8.jpg"]; // สามารถเพิ่ม .jpg ได้เรื่อยๆ
+  let index = 0;
+  const pic = document.getElementById("profilePic");
+
+  setInterval(() => {
+    // เริ่ม fade out
+    pic.style.transition = "opacity 1s";
+    pic.style.opacity = 0;
+
+    setTimeout(() => {
+      // เปลี่ยนภาพ
+      index = (index + 1) % images.length;
+      pic.src = images[index];
+
+      // fade in
+      pic.style.opacity = 1;
+    }, 1000); // เวลา fade out
+  }, 4000); // เวลาเปลี่ยนรูปแต่ละภาพ
+</script>
+
+
+  <!-- JS พื้นหลังเคลื่อนไหว -->
+  <script>
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 3 + 1,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5,
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#cfd8dc"; // จุดสีเทาอ่อน
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+
+</body>
+</html>
